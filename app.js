@@ -1,6 +1,7 @@
 import { order } from "./request/POST.js";
 import { getOrder } from "./request/GET.js";
 import { editOrder } from "./request/PUT.js";
+import { deleteOrder } from "./request/DELETE.js";
 
 const orderButton = document.querySelector("#add-order-form");
 const orderList = document.querySelector("#orders");
@@ -23,7 +24,14 @@ orderButton.addEventListener("submit", async (e) => {
 });
 
 export async function renderFood() {
+  orderList.innerHTML = "";
   const items = await getOrder();
+
+  console.log(items);
+
+  // local storage
+  localStorage.setItem("orders", JSON.stringify(items));
+
   items.forEach((item) => {
     const order = document.createElement("h4");
     const deleteBtn = document.createElement("button");
@@ -47,6 +55,7 @@ export async function renderFood() {
     deleteBtn.addEventListener("click", async () => {
       console.log("Delete button clicked");
       console.log(item._uuid);
+      deleteOrder(item._uuid);
     });
   });
 }
