@@ -1,16 +1,15 @@
 import { APIurl } from "./auth.js";
 import { apiKey } from "./auth.js";
-import { renderFood } from "../app.js";
 
-export async function order(order) {
+export async function getOrder() {
   try {
-    const response = await axios.post(APIurl, [order], {
+    const response = await axios.get(APIurl, {
       headers: {
         Authorization: `Bearer ${apiKey}`,
       },
     });
-    console.log("Lagt til bestilling", response);
-    renderFood();
+    console.log("hentet bestillinger");
+    return response.data.items;
   } catch (error) {
     console.log("Error med å legge inn bestilling", error);
   }
