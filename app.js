@@ -1,14 +1,13 @@
 import { order } from "./request/POST.js";
 import { getOrder } from "./request/GET.js";
+import { editOrder } from "./request/PUT.js";
 
 const orderButton = document.querySelector("#add-order-form");
 const orderList = document.querySelector("#orders");
 
 orderButton.addEventListener("submit", async (e) => {
-  e.preventDefault();
-  console.log("clicked");
-
   orderList.innerHTML = "";
+  e.preventDefault();
 
   const bestilling = {
     order: document.querySelector("#order").value,
@@ -26,9 +25,28 @@ orderButton.addEventListener("submit", async (e) => {
 export async function renderFood() {
   const items = await getOrder();
   items.forEach((item) => {
-    const html = `<li class="item">${item.order} - ${item.antall} <button>slett</button> <button>Edit</button></li>`;
-    orderList.innerHTML += html;
-  });
+    const order = document.createElement("h4");
+    const deleteBtn = document.createElement("button");
+    const editBtn = document.createElement("button");
+    deleteBtn.innerText = "slett ❌";
+    editBtn.innerText = "Edit ✍️";
+    order.innerText = `${item.order} - ${item.antall}`;
+    orderList.appendChild(order);
+    orderList.appendChild(editBtn);
+    orderList.appendChild(deleteBtn);
 
-  console.log("items", items);
+    // endrings logikk
+    editBtn.addEventListener("click", async () => {
+      editOrder(item._uuid);
+      orderList.innerHTML = "";
+      console.log("Edit button clicked");
+      console.log(item._uuid);
+    });
+
+    // slett logikk
+    deleteBtn.addEventListener("click", async () => {
+      console.log("Delete button clicked");
+      console.log(item._uuid);
+    });
+  });
 }
